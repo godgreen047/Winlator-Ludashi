@@ -90,7 +90,6 @@ preBuild.dependsOn(downloadProton)
 
 android {
     namespace 'com.winlator.cmod'
-    // Keep compileSdk from your current config. If you want to match Termux-X11, you could set to 34.
     compileSdk 35
     buildToolsVersion "35.0.0"
 
@@ -99,29 +98,27 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.winlator.cmod"
+        // Samsung Game Booster experiment: use official Winlator package id because
+        // Samsung appears to recognize the official app but not the Ludashi/CMOD id.
+        // This means it cannot be installed alongside official Winlator.
+        applicationId "com.winlator"
         minSdkVersion 28
-        // We’re preserving Winlator’s request to keep targetSdkVersion at 28
         targetSdkVersion 28
 
-        versionCode 20
-        versionName "4.1"
+        versionCode 21
+        versionName "4.1-samsung-gamebooster"
 
-        // External native build from Winlator
         externalNativeBuild {
             cmake {
                 cppFlags ''
             }
         }
 
-        // You originally only did arm64-v8a. If you want multi-ABI splits, see below.
         ndk {
             abiFilters 'arm64-v8a'
         }
     }
 
-    // Java versions: Winlator uses Java 17, Termux-X11 used 1.9
-    // Using 17 is typically fine (covers 1.9 features).
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -132,7 +129,6 @@ android {
         freeCompilerArgs += ['-opt-in=androidx.compose.material3.ExperimentalMaterial3Api']
     }
 
-    // Keep Winlator’s buildTypes
     buildTypes {
         debug {
             minifyEnabled false
@@ -152,7 +148,6 @@ android {
         }
     }
 
-    // If you want to be sure modern JNI packaging is used:
     packagingOptions {
         jniLibs {
             useLegacyPackaging = true
@@ -177,7 +172,6 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended'
     debugImplementation 'androidx.compose.ui:ui-tooling'
 
-    // Winlator’s dependencies
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.google.android.material:material:1.4.0'
