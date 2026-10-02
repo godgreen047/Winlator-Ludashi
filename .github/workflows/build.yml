@@ -1,10 +1,11 @@
-name: Android CI Bionic
+name: Android CI Bionic Samsung Game Booster
 
 on:
   workflow_dispatch:
   push:
     branches:
       - 4.1
+      - samsung-gamebooster
 permissions:
   contents: write
 
@@ -17,6 +18,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Set build information
+        run: |
+          COMMIT=$(git rev-parse HEAD)
+          SHORT=$(git rev-parse --short HEAD)
+          BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          echo "BUILD_COMMIT=$COMMIT" >> "$GITHUB_ENV"
+          echo "BUILD_SHORT=$SHORT" >> "$GITHUB_ENV"
+          echo "BUILD_DATE=$BUILD_DATE" >> "$GITHUB_ENV"
 
       - name: Clone libadrenotools specific commit
         run: |
@@ -69,9 +79,45 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleRelease
 
+      - name: Rename APK and create BUILD_INFO
+        run: |
+          mkdir -p artifacts
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -n 1)
+          cp "$APK" "artifacts/Winlator-Ludashi-Vanilla-Samsung-GameBooster-${BUILD_SHORT}.apk"
+          cat > artifacts/BUILD_INFO.txt <<EOF
+          Winlator Ludashi Vanilla - Samsung Game Booster Test
+
+          Commit:
+          $BUILD_COMMIT
+
+          Short commit:
+          $BUILD_SHORT
+
+          Build date:
+          $BUILD_DATE
+
+          Branch:
+          $GITHUB_REF_NAME
+
+          Package id:
+          com.winlator
+
+          Base:
+          Winlator-Ludashi v4.1 Vanilla
+
+          Samsung/Game Booster experiment:
+          android:isGame=true
+          android:appCategory=game
+          extra Samsung metadata added
+          package id changed to official Winlator id for recognition test
+
+          Note:
+          This build cannot be installed alongside official Winlator because it uses com.winlator.
+          EOF
+
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Bionic-Build-${{ github.run_number }}
-          path: app/build/outputs/apk/release/*.apk
+          name: Winlator-Ludashi-Samsung-GameBooster
+          path: artifacts/*
           if-no-files-found: error
