@@ -161,13 +161,13 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.winlator.cmod"
+        applicationId "com.winlator"
         minSdkVersion 28
         // We’re preserving Winlator’s request to keep targetSdkVersion at 28
         targetSdkVersion 28
 
-        versionCode 30
-        versionName "5.0"
+        versionCode 31
+        versionName "5.0-samsung-gamebooster"
 
         // External native build from Winlator
         externalNativeBuild {
@@ -211,7 +211,7 @@ android {
         }
         release {
             minifyEnabled false
-            signingConfig signingConfigs.upstream
+            signingConfig signingConfigs.debug
             crunchPngs false
         }
     }
