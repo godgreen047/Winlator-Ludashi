@@ -174,6 +174,9 @@
         </provider>
 
         <meta-data android:name="com.samsung.android.multidisplay.keep_process_alive" android:value="false"/>
+        <meta-data android:name="com.samsung.android.game.gametools.game" android:value="true" />
+        <meta-data android:name="com.samsung.android.game.gos.category" android:value="game" />
+        <meta-data android:name="com.samsung.android.game.gos.performance" android:value="true" />
         <meta-data android:name="android.allow_multiple_resumed_activities" android:value="true" />
     </application>
 </manifest>
